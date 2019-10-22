@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
@@ -82,10 +83,27 @@ namespace ControlCatalog.Pages
                     this.RaiseAndSetIfChanged(ref _selectionMode, value);
                 }
             }
+
+            public void SortParent()
+            {               
+                var tmp = Items[0];
+                Items.RemoveAt(0);
+                Items.Insert(1, tmp);
+            }
+
+            public void SortChild()
+            {
+                var node = Items[0];
+                var tmp = node.Children[0];
+                node.Children.RemoveAt(0);
+                node.Children.Insert(1, tmp);
+            }
         }
 
         private class Node
         {
+            public bool IsExpanded { get; set; }
+
             private int _counter;
             private ObservableCollection<Node> _children;
 
@@ -99,7 +117,7 @@ namespace ControlCatalog.Pages
                 {
                     if (_children == null)
                     {
-                        _children = new ObservableCollection<Node>(Enumerable.Range(1, 10).Select(i => CreateNewNode()));
+                        _children = new ObservableCollection<Node>(Enumerable.Range(1, 2).Select(i => CreateNewNode()));
                     }
                     return _children;
                 }
